@@ -307,4 +307,30 @@ class BaseViewModel extends ChangeNotifier {
       return false;
     }
   }
+  
+  Future<List<UserModels>> getUserAll() async {
+    final List<UserModels> userAll = [];
+    try{
+      final results = await services.fetchDataFromTable('users');
+
+      if(results == null){
+        return userAll;
+      }
+      userAll.addAll(
+        results!.map((row) {
+          return UserModels(
+              userId: row[0],
+              fname: row[1],
+              lname: row[2],
+              lastlogin: row[3],
+              email: row[4],
+              password: row[5],
+          );
+        })
+      );
+      return userAll;
+    }catch(e){
+      throw Exception(e);
+    }
+  }
 }

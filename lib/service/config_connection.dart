@@ -16,7 +16,7 @@ class ConnectDatabase {
   // List Database
   //add database and Edit default
   static const String postgres = "postgres"; //Don't remove
-  static const String keplerTest = "test";
+  static const String keplerTest = "kepler_main";
   ConnectDatabase({required this.databaseName});
 
   final String databaseName;

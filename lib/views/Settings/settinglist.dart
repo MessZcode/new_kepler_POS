@@ -2,6 +2,7 @@ import 'dart:developer';
 //
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:kepler_pos/views/Settings/settingApp.dart';
 import 'package:provider/provider.dart';
 import '../../ViewModel/theme_viewmodel.dart';
 import '../../models/setting_model.dart';
@@ -280,7 +281,8 @@ class _SettinglistbymenulistitemState extends State<Settinglistbymenulistitem> {
                         ),
                       ],
                     )
-                  : Column(
+                  : widget.items.id == 2
+                  ? Column(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,7 +377,8 @@ class _SettinglistbymenulistitemState extends State<Settinglistbymenulistitem> {
                           ),
                         ),
                       ],
-                    ),
+                    ):
+                  const SettingsAdmin(),
             ),
           )
         ],

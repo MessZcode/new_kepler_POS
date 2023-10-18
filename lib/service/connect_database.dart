@@ -45,7 +45,8 @@ class TestServices {
         await ctx.query('''
             CREATE TABLE category (
                 categoryid int  PRIMARY KEY,
-                categoryName VARCHAR(50)
+                categoryName VARCHAR(50),
+                workingStatus BOOLEAN
             );
             ''');
         await ctx.query('''
@@ -165,8 +166,9 @@ class TestServices {
               ('Suphisara' , 'BABABA' , CURRENT_TIMESTAMP , 'admin2' , '12345678');
           ''');
         await ctx.query(''' 
-             INSERT INTO category (categoryid ,categoryName)VALUES
-              (1 ,'All Item'),(2 ,'Promotion'),(3 ,'Suggest Promotion'),(4 ,'Jeans'),(5,'Skirts'),(6,'T-Shirts'),(7,'Blazers');
+             INSERT INTO category (categoryid ,categoryName , workingStatus)VALUES
+              (1 ,'All Item',true),(2 ,'Promotion',true),(3 ,'Suggest Promotion', true),
+              (4 ,'Jeans',true),(5,'Skirts',true),(6,'T-Shirts',true),(7,'Blazers' ,true);
           ''');
         await ctx.query(''' 
             INSERT INTO products (productName , productPrice , ImageUrl , stockQTY ,IsSuggest,IsPromotion, categoryid)VALUES
