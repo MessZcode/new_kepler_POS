@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kepler_pos/views/Settings/settingsApp/setting_category.dart';
 import 'package:kepler_pos/views/Settings/settingsApp/setting_discount.dart';
 import 'package:kepler_pos/views/Settings/settingsApp/setting_user.dart';
+import 'package:kepler_pos/views/Settings/settingsApp/viewModel/setting_app_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class SettingsAdmin extends StatefulWidget {
   const SettingsAdmin({super.key});
@@ -14,12 +16,7 @@ class _SettingsAdminState extends State<SettingsAdmin> {
   String? selectValue;
   @override
   Widget build(BuildContext context) {
-    const List<String> list = <String>[
-      'setting users',
-      'setting category',
-      'setting discount',
-      'setting menu'
-    ];
+    final settingApp = context.watch<SettingAppViewModel>();
     final theme = Theme.of(context).colorScheme;
     return Column(
       children: [
@@ -54,7 +51,7 @@ class _SettingsAdminState extends State<SettingsAdmin> {
             ),
             enableFeedback: true,
             elevation: 20,
-            items: list.map((value) {
+            items: settingApp.list.map((value) {
               return DropdownMenuItem<String>(value: value, child: Text(value));
             }).toList(),
             onChanged: (newValue) {

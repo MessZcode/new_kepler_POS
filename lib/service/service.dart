@@ -43,13 +43,15 @@ class Services {
   }
 
   //Delete data byId
-  Future<void> deleteDataFromTable(String tableName, String columnName, int id) async {
+  Future<void> deleteDataFromTable(
+      String tableName, String columnName, int id) async {
     final connection = await connectToDatabase();
     if (connection == null) {
       return;
     }
     try {
-      await connection.query('DELETE FROM $tableName WHERE $columnName = @id', substitutionValues: {'id': id});
+      await connection.query('DELETE FROM $tableName WHERE $columnName = @id',
+          substitutionValues: {'id': id});
       print('Data deleted successfully');
     } catch (e) {
       print("Error : $e");
@@ -116,7 +118,9 @@ class Services {
     return -1;
   }
 
-  Future<bool> addbillDetail({required List<BillDetailModel> billDetails, required int billOrder}) async {
+  Future<bool> addbillDetail(
+      {required List<BillDetailModel> billDetails,
+      required int billOrder}) async {
     final connection = await connectToDatabase();
     try {
       if (connection != null) {
@@ -154,7 +158,8 @@ class Services {
     return false;
   }
 
-  Future<void> updateOrder({required int orderId, required String newStatus}) async {
+  Future<void> updateOrder(
+      {required int orderId, required String newStatus}) async {
     final connection = await connectToDatabase();
     try {
       if (connection != null) {
@@ -181,7 +186,8 @@ class Services {
       return;
     }
     final columnsString = columns.join(', ');
-    final dataTableString = 'CREATE TABLE IF NOT EXISTS $tableName ($columnsString)';
+    final dataTableString =
+        'CREATE TABLE IF NOT EXISTS $tableName ($columnsString)';
     try {
       await connection.query(dataTableString);
       print('Table $dataTableString created successfully');
@@ -198,7 +204,8 @@ class Services {
       return null;
     }
     try {
-      final result = await connection.query('SELECT * FROM users ORDER BY lastlogin DESC LIMIT 2');
+      final result = await connection
+          .query('SELECT * FROM users ORDER BY lastlogin DESC LIMIT 2');
       return result;
     } catch (e) {
       print('Error: $e');
@@ -230,7 +237,8 @@ class Services {
         String lname = userRow[2] as String;
         String email = userRow[4] as String;
 
-        userProfile = UserProfile(userId: userId, fname: fname, lname: lname, email: email);
+        userProfile = UserProfile(
+            userId: userId, fname: fname, lname: lname, email: email);
       }
 
       return userProfile;
@@ -433,7 +441,8 @@ class Services {
     return status;
   }
 
-  Future<List<ShowOrderPaymentSuccessModel>> getShowPaymentSuccess({required BillOrderModels order}) async {
+  Future<List<ShowOrderPaymentSuccessModel>> getShowPaymentSuccess(
+      {required BillOrderModels order}) async {
     final connection = await connectToDatabase();
     try {
       if (connection != null) {
@@ -458,8 +467,8 @@ class Services {
             paymentChange: paymentChange,
             paymentString: '',
           );
-          paymentList.add(
-              ShowOrderPaymentSuccessModel.filterPaymentString(showOrderPaymentValue: showOrderPaymentSuccessModel));
+          paymentList.add(ShowOrderPaymentSuccessModel.filterPaymentString(
+              showOrderPaymentValue: showOrderPaymentSuccessModel));
         }
         return paymentList;
       }
@@ -514,7 +523,8 @@ class Services {
     }
   }
 
-  Future<bool> addSubmitPayment({required PaymentStatusDetail orderPayment}) async {
+  Future<bool> addSubmitPayment(
+      {required PaymentStatusDetail orderPayment}) async {
     final connection = await connectToDatabase();
     try {
       if (connection != null) {
@@ -525,7 +535,8 @@ class Services {
           int? newPaymentSeq = 0;
           newPaymentSeq = int.tryParse(objPaymentSeq[0][0].toString());
           //todo แก้ไข changeAmount
-          final paymentValue = orderPayment.paymentValue - orderPayment.changeAmount;
+          final paymentValue =
+              orderPayment.paymentValue - orderPayment.changeAmount;
           await t.query(
               'INSERT INTO ${TableString.orderPayment} (orderId , paymentseq , paymentid , paymentvalue , paymentchange) '
               'VALUES (@orderId , @paymentseq , @paymentId , @paymentValue , @paymentChange)',
@@ -545,6 +556,22 @@ class Services {
       return false;
     } finally {
       await connection!.close();
+    }
+  }
+
+  Future<PostgreSQLResult?> getUserByOne({required int userId}) async {
+    final connection = await connectToDatabase();
+    if (connection == null) {
+      return null;
+    }
+    try {
+      final results = await connection.query('SELECT * FROM users first where userId = $userId');
+      return results;
+    } catch (e) {
+      print("Error : $e");
+      return null;
+    } finally {
+      await connection.close();
     }
   }
 
@@ -568,13 +595,78 @@ class Services {
       await connection!.close();
     }
   }
+  Future<void> saveEditUser({required UserModels newUserModel}) async {
+    final connection = await connectToDatabase();
+    if (connection == null) {
+      return;
+    }
+    try {
+      final query = '''
+      UPDATE users
+      SET 
+        fname = '${newUserModel.fname}',
+        lname = '${newUserModel.lname}',
+        email = '${newUserModel.email}',
+        password = '${newUserModel.password}'
+      WHERE userId = ${newUserModel.userId}
+    ''';
+      // ดำเนินการอัปเดตข้อมูล
+      await connection.query(query);
 
-  Future<void> addCurrentCash({required int type, required double cashValue}) async {
+    } catch (e) {
+      print("Error: $e");
+    } finally {
+      await connection.close();
+    }
+  }
+
+  Future<void> createNewUser({required UserModels newUserModel}) async {
+    final connection = await connectToDatabase();
+    if (connection == null) {
+      return;
+    }
+    try {
+      await connection.query(
+        'INSERT INTO users (fname, lname, lastlogin, email, password, permissionlv) VALUES (@fname, @lname, @lastlogin, @email, @password, @permissionlv)',
+        substitutionValues: {
+          'fname': newUserModel.fname,
+          'lname': newUserModel.lname,
+          'lastlogin': newUserModel.lastlogin,
+          'email': newUserModel.email,
+          'password': newUserModel.password,
+          'permissionlv': newUserModel.permissionLv,
+        },);
+    } catch (e) {
+      print("Error: $e");
+    } finally {
+      await connection.close();
+    }
+  }
+
+
+  Future<void> deleteUserById({required int userId}) async {
+    final connection = await connectToDatabase();
+    if (connection == null) {
+      return;
+    }
+    try {
+      await connection.query(
+        'DELETE FROM users WHERE userId = $userId;'
+      );
+    } catch (e) {
+      print("Error: $e");
+    } finally {
+      await connection.close();
+    }
+  }
+  Future<void> addCurrentCash(
+      {required int type, required double cashValue}) async {
     final connection = await connectToDatabase();
     try {
       if (connection != null) {
         await connection.transaction((t) async {
-          var pid = await t.query('Select Coalesce(max(pid),0)+1 as pid From ${TableString.drawers}');
+          var pid = await t.query(
+              'Select Coalesce(max(pid),0)+1 as pid From ${TableString.drawers}');
           await t.query(
               'INSERT INTO ${TableString.drawers} (pid,systemdate , type , cashvalue , reasonid) VALUES (@pid,@systemDate , @type , @cashValue , @reasonId)',
               substitutionValues: {
@@ -616,7 +708,11 @@ class UserProfile {
   final String lname;
   final String email;
 
-  UserProfile({required this.userId, required this.fname, required this.lname, required this.email});
+  UserProfile(
+      {required this.userId,
+      required this.fname,
+      required this.lname,
+      required this.email});
 }
 
 class ModelCreate {

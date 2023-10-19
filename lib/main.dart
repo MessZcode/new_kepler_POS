@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kepler_pos/ViewModel/home_viewModels.dart';
+import 'package:kepler_pos/views/Settings/settingsApp/viewModel/setting_app_viewmodel.dart';
+import 'package:kepler_pos/views/Settings/settingsApp/viewModel/setting_user_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'ViewModel/Routes/routes.dart';
 import 'ViewModel/base_viewmodel.dart';
@@ -25,6 +27,8 @@ void main() async {
         ChangeNotifierProvider(create: (context) => Loginviewmodel()),
         ChangeNotifierProvider(create: (context) => BillViewModels()),
         ChangeNotifierProvider(create: (context) => MembershipViewmodel()),
+        ChangeNotifierProvider(create: (context) => SettingAppViewModel(),),
+        ChangeNotifierProvider(create: (context) => SettingUserViewModel(),),
         ChangeNotifierProvider(
           create: (context) => PaymentViewModels(),
         ),

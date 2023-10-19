@@ -14,26 +14,32 @@ class Status {
 }
 
 class UserModels {
-  final int userId;
-  final String fname;
-  final String lname;
-  final DateTime lastlogin;
-  final String email;
-  final String password;
-
-  UserModels(
-      {required this.userId,
+  int userId;
+  String fname;
+  String lname;
+  DateTime? lastlogin;
+  String email;
+  String password;
+  int permissionLv;
+  UserModels({
+        required this.userId,
       required this.fname,
       required this.lname,
       required this.lastlogin,
       required this.email,
-      required this.password});
+      required this.password,
+      required this.permissionLv,
+      });
+  factory UserModels.initial(){
+    return UserModels(userId: 0, fname: "", lname: "lname", lastlogin: null, email: "", password: "", permissionLv: 0,);
+  }
 }
 
 class BaseViewModel extends ChangeNotifier {
   final services = Services();
   final testServices = TestServices();
   final apiServices = ApiServices();
+
   UserProfile profile = UserProfile(userId: 0, fname: "", lname: "", email: "");
 
   List<PagesModels> pages = [];
@@ -43,7 +49,7 @@ class BaseViewModel extends ChangeNotifier {
   List<BillDetailModel> billDetail = [];
   List<CustomerModels> customer = [];
   List<UserModels> userslastlogin = [];
-
+  // List<UserModels> userAll = [];
   String statusString = "";
 
   Future<Status> start() async {
@@ -115,6 +121,7 @@ class BaseViewModel extends ChangeNotifier {
         lastlogin: lastLogin[3],
         email: lastLogin[4],
         password: lastLogin[5],
+          permissionLv:lastLogin[6] ,
       );
     }).toList();
     userslastlogin.addAll(last);
@@ -308,29 +315,9 @@ class BaseViewModel extends ChangeNotifier {
     }
   }
   
-  Future<List<UserModels>> getUserAll() async {
-    final List<UserModels> userAll = [];
-    try{
-      final results = await services.fetchDataFromTable('users');
 
-      if(results == null){
-        return userAll;
-      }
-      userAll.addAll(
-        results!.map((row) {
-          return UserModels(
-              userId: row[0],
-              fname: row[1],
-              lname: row[2],
-              lastlogin: row[3],
-              email: row[4],
-              password: row[5],
-          );
-        })
-      );
-      return userAll;
-    }catch(e){
-      throw Exception(e);
-    }
-  }
+
+
+
+
 }
