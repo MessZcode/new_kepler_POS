@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:kepler_pos/ViewModel/base_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -34,52 +35,82 @@ class _UserSettingViewState extends State<UserSettingView> {
         FutureBuilder(
           future: context.read<BaseViewModel>().getUserAll(),
           builder: (context, snapshot) {
-
-            if(snapshot.hasData){
+            if (snapshot.hasData) {
               return Expanded(
-                child: DataTable(
-                  columnSpacing: 90,
-                  showBottomBorder: true,
-                  columns: const [
-                    DataColumn(
-                      label: Expanded(
-                        child: Text("First Name"),
+                child: SingleChildScrollView(
+                  child: DataTable(
+                    columnSpacing: 90,
+                    showBottomBorder: true,
+                    columns: const [
+                      DataColumn(
+                        label: Expanded(
+                          child: Text("First Name"),
+                        ),
                       ),
-                    ),
-                    DataColumn(
-                      label: Expanded(
-                        child: Text("Last Name"),
+                      DataColumn(
+                        label: Expanded(
+                          child: Text("Last Name"),
+                        ),
                       ),
-                    ),
-                    DataColumn(
-                      label: Expanded(
-                        child: Text("Last Login"),
+                      DataColumn(
+                        label: Expanded(
+                          child: Text("Last Login"),
+                        ),
                       ),
-                    ),
-                    DataColumn(
-                      label: Expanded(
-                        child: Text("Username"),
+                      DataColumn(
+                        label: Expanded(
+                          child: Text("Username"),
+                        ),
                       ),
-                    ),
-                    DataColumn(
-                      label: Expanded(
-                        child: Text("Edit"),
+                      DataColumn(
+                        label: Expanded(
+                          child: Text("Edit"),
+                        ),
                       ),
-                    ),
-                    DataColumn(
-                      label: Expanded(
-                        child: Text("Delete"),
+                      DataColumn(
+                        label: Expanded(
+                          child: Text("Delete"),
+                        ),
                       ),
-                    ),
-                  ],
-                  rows: [
-                    // DataRow(cells: )
-                  ],
+                    ],
+                    rows: snapshot.hasData
+                        ? List.generate(snapshot.data!.length, (index) {
+                            return DataRow(cells: <DataCell>[
+                              DataCell(
+                                Text(snapshot.data![index].fname),
+                              ),
+                              DataCell(
+                                Text(snapshot.data![index].lname),
+                              ),
+                              DataCell(
+                                Text(DateFormat('dd MMM yyyy').format(snapshot.data![index].lastlogin).toString()),
+                              ),
+                              DataCell(
+                                Text(snapshot.data![index].email),
+                              ),
+                              DataCell(
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.edit),
+                                  color: Colors.amber,
+                                ),
+                              ),
+                              DataCell(
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.delete),
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ]);
+                          })
+                        : [],
+                  ),
                 ),
               );
             }
             // if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text("warning");
+            return const Text("warning");
             // }
           },
         ),

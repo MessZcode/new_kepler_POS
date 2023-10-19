@@ -39,18 +39,19 @@ class TestServices {
                 lname VARCHAR(50) ,
                 lastLogin TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
                 email VARCHAR(50) ,
-                password VARCHAR(50)
+                password VARCHAR(50),
+                permissionLv int
             );
           ''');
         await ctx.query('''
-            CREATE TABLE category (
+            CREATE TABLE IF NOT EXISTS category (
                 categoryid int  PRIMARY KEY,
                 categoryName VARCHAR(50),
                 workingStatus BOOLEAN
             );
             ''');
         await ctx.query('''
-            CREATE TABLE products (
+            CREATE TABLE IF NOT EXISTS products (
                 productId SERIAL PRIMARY KEY,
                 productName VARCHAR(50) ,
                 productPrice DECIMAL(10 , 2),
@@ -63,7 +64,7 @@ class TestServices {
             );
           ''');
         await ctx.query('''
-            CREATE TABLE customers (
+            CREATE TABLE IF NOT EXISTS customers (
               customerId SERIAL PRIMARY KEY,
               fname VARCHAR(50) ,
               lname VARCHAR(50) ,
@@ -73,7 +74,7 @@ class TestServices {
             );
           ''');
         await ctx.query('''
-            CREATE TABLE orders(
+            CREATE TABLE IF NOT EXISTS orders(
               orderId SERIAL PRIMARY KEY,
               orderDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
               totalAmount DECIMAL(10,2),
@@ -86,7 +87,7 @@ class TestServices {
             );
           ''');
         await ctx.query('''
-            CREATE TABLE orderDetail(
+            CREATE TABLE IF NOT EXISTS orderDetail(
               orderId int,
               orderDetailId int,
               productId int,
@@ -101,8 +102,8 @@ class TestServices {
           );
           ''');
         await ctx.query('''
-            --CREATE ORDERPAYMENT
-              CREATE TABLE orderpayments (
+            --CREATE  ORDERPAYMENT
+              CREATE TABLE IF NOT EXISTS orderpayments (
                   orderid int ,
                   paymentseq int ,
                   paymentid int,
@@ -112,7 +113,7 @@ class TestServices {
               );
           ''');
         await ctx.query('''
-            CREATE TABLE drawerdetail(
+            CREATE TABLE IF NOT EXISTS drawerdetail(
               pid integer NOT NULL,
               tenderid integer NOT NULL,
               tenderqty integer NOT NULL,
@@ -120,28 +121,28 @@ class TestServices {
             );
           ''');
         await ctx.query('''
-            CREATE TABLE drawertender(
+            CREATE TABLE IF NOT EXISTS drawertender(
               tenderid integer,
               tenderqty integer NOT NULL,
               tendervalue numeric NOT NULL
             );
           ''');
         await ctx.query('''
-            CREATE TABLE drawerreason(
+            CREATE TABLE IF NOT EXISTS drawerreason(
               reasonid integer NOT NULL,
               reasonname character(255) COLLATE pg_catalog."default" NOT NULL
             );
           ''');
         await ctx.query('''
             --CREATE DRAWERTYPE
-            CREATE TABLE drawertype(
+            CREATE TABLE IF NOT EXISTS drawertype(
                 type integer NOT NULL,
                 typename character(255) COLLATE pg_catalog."default" NOT NULL
             );
           ''');
         await ctx.query('''
             --CREATE DRAWER
-            CREATE TABLE drawer(
+            CREATE TABLE IF NOT EXISTS drawer(
                 pid integer NOT NULL,
                 systemdate timestamp with time zone NOT NULL,
                 type integer NOT NULL,
@@ -161,9 +162,22 @@ class TestServices {
               (5,'SettingPage' , 'Setting' ,'setting.png' );
           ''');
         await ctx.query(''' 
-             INSERT INTO users (fname , lname , lastLogin , email , password) VALUES
-              ('Poramet' , 'DADADA' , CURRENT_TIMESTAMP , 'admin1' , '1234'),
-              ('Suphisara' , 'BABABA' , CURRENT_TIMESTAMP , 'admin2' , '12345678');
+             INSERT INTO users (fname , lname , lastLogin , email , password , permissionLv) VALUES
+              ('Poramet' , 'DADADA' , CURRENT_TIMESTAMP , 'admin1' , '1234' , 1),
+              ('Suphisara' , 'BABABA' , CURRENT_TIMESTAMP , 'admin2' , '12345678' ,1),
+              ('Poramet' , 'DADADA' , CURRENT_TIMESTAMP , 'admin3' , '1234' , 1),
+              ('Suphisara' , 'BABABA' , CURRENT_TIMESTAMP , 'admin4' , '12345678' ,1),
+              ('Poramet' , 'DADADA' , CURRENT_TIMESTAMP , 'admin5' , '1234' , 1),
+              ('Suphisara' , 'BABABA' , CURRENT_TIMESTAMP , 'admin6' , '12345678' ,1),
+              ('Poramet' , 'DADADA' , CURRENT_TIMESTAMP , 'admin7' , '1234' , 1),
+              ('Suphisara' , 'BABABA' , CURRENT_TIMESTAMP , 'admin8' , '12345678' ,1),
+              ('Poramet' , 'DADADA' , CURRENT_TIMESTAMP , 'admin9' , '1234' , 1),
+              ('Suphisara' , 'BABABA' , CURRENT_TIMESTAMP , 'admin10' , '12345678' ,1),
+              ('Poramet' , 'DADADA' , CURRENT_TIMESTAMP , 'admin11' , '1234' , 1),
+              ('Suphisara' , 'BABABA' , CURRENT_TIMESTAMP , 'admin12' , '12345678' ,1),
+              ('Poramet' , 'DADADA' , CURRENT_TIMESTAMP , 'admin13' , '1234' , 1),
+              ('Suphisara' , 'BABABA' , CURRENT_TIMESTAMP , 'admin14' , '12345678' ,1),
+              ('Suphisara' , 'BABABA' , CURRENT_TIMESTAMP , 'admin15' , '12345678' ,1);
           ''');
         await ctx.query(''' 
              INSERT INTO category (categoryid ,categoryName , workingStatus)VALUES
