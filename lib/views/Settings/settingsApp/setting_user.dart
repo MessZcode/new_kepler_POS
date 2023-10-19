@@ -13,7 +13,7 @@ class UserSettingView extends StatefulWidget {
 class _UserSettingViewState extends State<UserSettingView> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme;
+    // final theme = Theme.of(context).colorScheme;
 
     return Column(
       children: [
@@ -89,17 +89,29 @@ class _UserSettingViewState extends State<UserSettingView> {
                                 Text(snapshot.data![index].email),
                               ),
                               DataCell(
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.edit),
-                                  color: Colors.amber,
+                                InkWell(
+                                  onTap: () {},
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.edit,
+                                      color: Colors.amber,
+                                      size: 24.0, // ตั้งค่าขนาดไอคอน
+                                    ),
+                                  ),
                                 ),
                               ),
                               DataCell(
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.delete),
-                                  color: Colors.red,
+                                InkWell(
+                                  onTap: () {},
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                      size: 24.0, // ตั้งค่าขนาดไอคอน
+                                    ),
+                                  ),
                                 ),
                               ),
                             ]);
