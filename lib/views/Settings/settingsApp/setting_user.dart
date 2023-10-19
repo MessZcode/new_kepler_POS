@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kepler_pos/views/Settings/settingsApp/viewModel/setting_app_viewmodel.dart';
 import 'package:kepler_pos/views/Settings/settingsApp/viewModel/setting_user_viewmodel.dart';
 import 'package:kepler_pos/views/Settings/settingsApp/widget/formCreate_user.dart';
 import 'package:kepler_pos/views/Settings/settingsApp/widget/formEdit_user.dart';

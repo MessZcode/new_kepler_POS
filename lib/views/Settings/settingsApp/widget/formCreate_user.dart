@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../ViewModel/base_viewmodel.dart';
+import '../viewModel/setting_user_viewmodel.dart';
 
 class FormCreateUserView extends StatefulWidget {
   const FormCreateUserView({super.key});
@@ -16,7 +20,7 @@ class _FormCreateUserViewState extends State<FormCreateUserView> {
       GlobalKey<FormFieldState<String>>();
   final GlobalKey<FormFieldState<String>> _passwordKey =
       GlobalKey<FormFieldState<String>>();
-  int? userId;
+
   String firstName = "";
   String lastName = "";
   String username = "";
@@ -114,7 +118,7 @@ class _FormCreateUserViewState extends State<FormCreateUserView> {
                   width: double.infinity,
                   height: 50,
                   child: DropdownButton<int>(
-                    // value: selectValue ?? snapshot.data!.permissionLv,
+                    value: selectPermission ,
                     underline: Container(),
                     isDense: false,
                     padding: null,
@@ -155,17 +159,17 @@ class _FormCreateUserViewState extends State<FormCreateUserView> {
               password = _passwordKey.currentState!.value.toString();
             }
 
-            // UserModels newValue = UserModels(
-            //     userId: userId!,
-            //     fname: firstName,
-            //     lname: lastName,
-            //     lastlogin: lastlogin!,
-            //     email: username,
-            //     password: password,
-            //     permissionLv: selectValue!);
-            // await context
-            //     .read<SettingUserViewModel>()
-            //     .saveEditUser(newUserModel: newValue);
+            UserModels newValue = UserModels(
+                userId: 0,
+                fname: firstName,
+                lname: lastName,
+                lastlogin: null,
+                email: username,
+                password: password,
+                permissionLv: selectPermission!);
+            await context
+                .read<SettingUserViewModel>()
+                .createNewUser(newUser: newValue);
             Navigator.pop(context);
           },
           style: ElevatedButton.styleFrom(
