@@ -6,7 +6,7 @@ import '../service/service.dart';
 class DrawerViewModels extends ChangeNotifier {
   final service = Services();
   int page = 0;
-  double currentCash = 0.0;
+  double currentCash = 0.00;
 
   void paymentcash(double payment) {
     currentCash += payment;

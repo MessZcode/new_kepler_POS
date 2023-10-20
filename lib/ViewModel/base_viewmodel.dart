@@ -38,7 +38,7 @@ class BaseViewModel extends ChangeNotifier {
 
   List<PagesModels> pages = [];
   List<CategoryModels> category = [];
-  List<productModels> product = [];
+  List<ProductModels> product = [];
   List<BillOrderModels> billOrder = [];
   List<BillDetailModel> billDetail = [];
   List<CustomerModels> customer = [];
@@ -211,8 +211,8 @@ class BaseViewModel extends ChangeNotifier {
     product.clear();
     try {
       var getProducts = await services.fetchDataFromTable(TableString.products);
-      List<productModels> productlist = getProducts!.map((products) {
-        return productModels(
+      List<ProductModels> productlist = getProducts!.map((products) {
+        return ProductModels(
           productId: products[0] as int,
           productName: products[1] as String,
           productPrice: double.parse(products[2]),

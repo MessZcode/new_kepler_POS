@@ -17,7 +17,7 @@ class HomeViewModels extends ChangeNotifier {
 
   List<int> selectCategoryId = [1];
 
-  List<productModels> filterProducts = [];
+  List<ProductModels> filterProducts = [];
   BillOrderModels billOrder = BillOrderModels.initial();
   List<BillDetailModel> billDetail = [];
   TextEditingController controller = TextEditingController();

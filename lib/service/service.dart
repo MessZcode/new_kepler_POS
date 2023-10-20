@@ -13,7 +13,7 @@ class Services {
       5432,
       'kepler_main',
       username: 'postgres',
-      password: '1234',
+      password: '12345678',
     );
     // final connection = ConnectDatabase.withDefault().connection();
     try {

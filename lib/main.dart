@@ -9,6 +9,7 @@ import 'ViewModel/membership_viewmodel.dart';
 import 'ViewModel/navbar_viewmodel.dart';
 import 'ViewModel/onBoarding_viewModel.dart';
 import 'ViewModel/payment_viewModel.dart';
+import 'ViewModel/report_viewmodel.dart';
 import 'ViewModel/theme_viewmodel.dart';
 import 'ViewModel/drawer_viewmodel.dart';
 
@@ -25,6 +26,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => Loginviewmodel()),
         ChangeNotifierProvider(create: (context) => BillViewModels()),
         ChangeNotifierProvider(create: (context) => MembershipViewmodel()),
+        ChangeNotifierProvider(create: (context) => ReportViewmodel()),
         ChangeNotifierProvider(
           create: (context) => PaymentViewModels(),
         ),

@@ -18,7 +18,7 @@ class CategoryModels {
   CategoryModels({required this.categoryId, required this.categoryName});
 }
 
-class productModels {
+class ProductModels {
   final int productId;
   final String productName;
   final double productPrice;
@@ -27,7 +27,7 @@ class productModels {
   final bool isSuggest;
   final bool isPromotion;
   final int categoryId;
-  productModels({
+  ProductModels({
     required this.productId,
     required this.productName,
     required this.productPrice,
@@ -55,14 +55,14 @@ class CustomerModels {
     required this.phone,
     required this.membershiptypeId,
   });
-  factory CustomerModels.initial(){
+  factory CustomerModels.initial() {
     return CustomerModels(
-        customerId: 0,
-        fname: "",
-        lname: "",
-        email: "",
-        phone: "",
-        membershiptypeId: 0,
+      customerId: 0,
+      fname: "",
+      lname: "",
+      email: "",
+      phone: "",
+      membershiptypeId: 0,
     );
   }
 }
@@ -136,11 +136,18 @@ class ShowOrderPaymentSuccessModel {
   double paymentChange;
   String paymentString;
 
-  ShowOrderPaymentSuccessModel({required this.orderId , required this.paymentSeq , required this.paymentId , required this.paymentValue , required this.paymentChange , required this.paymentString});
+  ShowOrderPaymentSuccessModel(
+      {required this.orderId,
+      required this.paymentSeq,
+      required this.paymentId,
+      required this.paymentValue,
+      required this.paymentChange,
+      required this.paymentString});
 
-  factory ShowOrderPaymentSuccessModel.filterPaymentString({required ShowOrderPaymentSuccessModel showOrderPaymentValue}){
+  factory ShowOrderPaymentSuccessModel.filterPaymentString(
+      {required ShowOrderPaymentSuccessModel showOrderPaymentValue}) {
     String paymentString = "";
-    switch(showOrderPaymentValue.paymentId){
+    switch (showOrderPaymentValue.paymentId) {
       case 1:
         paymentString = "Cash";
         break;
@@ -166,12 +173,12 @@ class ShowOrderPaymentSuccessModel {
         paymentString = "";
     }
     return ShowOrderPaymentSuccessModel(
-        orderId: showOrderPaymentValue.orderId,
-        paymentSeq: showOrderPaymentValue.paymentSeq,
-        paymentId: showOrderPaymentValue.paymentId,
-        paymentValue: showOrderPaymentValue.paymentValue,
-        paymentChange: showOrderPaymentValue.paymentChange,
-        paymentString: paymentString,
+      orderId: showOrderPaymentValue.orderId,
+      paymentSeq: showOrderPaymentValue.paymentSeq,
+      paymentId: showOrderPaymentValue.paymentId,
+      paymentValue: showOrderPaymentValue.paymentValue,
+      paymentChange: showOrderPaymentValue.paymentChange,
+      paymentString: paymentString,
     );
   }
 }

@@ -6,7 +6,7 @@ class ConnectDatabase {
   static const portNumber = 5432;
   static const defaultDatabase = keplerTest;
   static const userName = "postgres";
-  static const password = "1234";
+  static const password = "12345678";
 
   //default database || Edit connection
   factory ConnectDatabase.withDefault() {
