@@ -643,7 +643,6 @@ class Services {
     }
   }
 
-
   Future<void> deleteUserById({required int userId}) async {
     final connection = await connectToDatabase();
     if (connection == null) {
@@ -682,6 +681,22 @@ class Services {
       print("Error : $e");
     } finally {
       await connection!.close();
+    }
+  }
+
+  Future<PostgreSQLResult?> getproductByOne({required int productId}) async {
+    final connection = await connectToDatabase();
+    if (connection == null) {
+      return null;
+    }
+    try {
+      final results = await connection.query('SELECT * FROM products first where productId = $productId');
+      return results;
+    } catch (e) {
+      print("Error : $e");
+      return null;
+    } finally {
+      await connection.close();
     }
   }
 }

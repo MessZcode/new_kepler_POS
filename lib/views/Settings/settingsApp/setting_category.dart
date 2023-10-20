@@ -10,6 +10,26 @@ class SettingCategoryView extends StatefulWidget {
 class _SettingCategoryViewState extends State<SettingCategoryView> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Column(
+      children: <Widget>[
+        Container(
+          margin: const EdgeInsets.all(10),
+          alignment: Alignment.topLeft,
+          child: TextButton.icon(
+            style: const ButtonStyle(
+              padding: MaterialStatePropertyAll(
+                EdgeInsets.all(15),
+              ),
+              backgroundColor: MaterialStatePropertyAll(Colors.black12),
+            ),
+            onPressed: () {
+            },
+            icon: const Icon(Icons.add),
+            label: const Text("Create"),
+          ),
+        ),
+        // FutureBuilder[Container]
+      ],
+    );
   }
 }

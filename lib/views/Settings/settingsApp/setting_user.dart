@@ -33,7 +33,6 @@ class _UserSettingViewState extends State<UserSettingView> {
             ),
             onPressed: () {
               showDialog(context: context, builder: (context) => const FormCreateUserView(),);
-
             },
             icon: const Icon(Icons.add),
             label: const Text("Create"),
@@ -92,9 +91,9 @@ class _UserSettingViewState extends State<UserSettingView> {
                                 Text(userAll[index].lname),
                               ),
                               DataCell(
-                                Text(DateFormat('dd MMM yyyy')
+                                Text(userAll[index].lastlogin!=null ?DateFormat('dd MMM yyyy')
                                     .format(userAll[index].lastlogin!)
-                                    .toString()),
+                                    .toString():"" ),
                               ),
                               DataCell(
                                 Text(userAll[index].email),

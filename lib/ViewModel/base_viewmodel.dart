@@ -43,8 +43,8 @@ class BaseViewModel extends ChangeNotifier {
   UserProfile profile = UserProfile(userId: 0, fname: "", lname: "", email: "");
 
   List<PagesModels> pages = [];
-  List<CategoryModels> category = [];
-  List<productModels> product = [];
+  List<SluGroup> category = [];
+  List<ProductModels> product = [];
   List<BillOrderModels> billOrder = [];
   List<BillDetailModel> billDetail = [];
   List<CustomerModels> customer = [];
@@ -201,8 +201,8 @@ class BaseViewModel extends ChangeNotifier {
     try {
       var getCategory = await services.fetchDataFromTable(TableString.category);
 
-      List<CategoryModels> _categoryList = getCategory!.map((category) {
-        return CategoryModels(categoryId: category[0] as int, categoryName: category[1] as String);
+      List<SluGroup> _categoryList = getCategory!.map((category) {
+        return SluGroup(sluGroupId: category[0] as int, sluGroupName: category[1] as String);
       }).toList();
 
       category.addAll(_categoryList);
@@ -218,8 +218,8 @@ class BaseViewModel extends ChangeNotifier {
     product.clear();
     try {
       var getProducts = await services.fetchDataFromTable(TableString.products);
-      List<productModels> productlist = getProducts!.map((products) {
-        return productModels(
+      List<ProductModels> productlist = getProducts!.map((products) {
+        return ProductModels(
           productId: products[0] as int,
           productName: products[1] as String,
           productPrice: double.parse(products[2]),
@@ -227,7 +227,7 @@ class BaseViewModel extends ChangeNotifier {
           stockQTY: products[4] as int,
           isSuggest: products[5] as bool,
           isPromotion: products[6] as bool,
-          categoryId: products[7] as int,
+          // categoryId: products[7] as int,
         );
       }).toList();
       product.addAll(productlist);

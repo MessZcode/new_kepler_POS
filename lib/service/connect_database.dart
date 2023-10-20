@@ -6,7 +6,7 @@ class TestServices {
   Future<void> checkDatabase() async {
     final connectDB = ConnectDatabase(databaseName: ConnectDatabase.postgres);
     final connection = connectDB.connection();
-//เพิ่มการใช้งาน uuid => CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
     try {
       await connection.open();
       final dbExistsResult = await connection.query(
@@ -55,12 +55,19 @@ class TestServices {
                 productId SERIAL PRIMARY KEY,
                 productName VARCHAR(50) ,
                 productPrice DECIMAL(10 , 2),
-                ImageUrl VARCHAR(150) ,
+                ImageUrl VARCHAR(150),
                 stockQTY int,
                 IsSuggest BOOLEAN DEFAULT false,
-                IsPromotion BOOLEAN DEFAULT false,
-                categoryid int ,
-                FOREIGN KEY (categoryid) REFERENCES category(categoryid)
+                IsPromotion BOOLEAN DEFAULT false
+            );
+          ''');
+        await ctx.query('''
+            CREATE TABLE IF NOT EXISTS slu_item (
+              slu_group_id int,
+              item_seq int,
+              productId int,
+              Primary Key (slu_group_id ,item_seq),
+              FOREIGN KEY (productId) REFERENCES products(productId)
             );
           ''');
         await ctx.query('''
@@ -185,17 +192,17 @@ class TestServices {
               (4 ,'Jeans',true),(5,'Skirts',true),(6,'T-Shirts',true),(7,'Blazers' ,true);
           ''');
         await ctx.query(''' 
-            INSERT INTO products (productName , productPrice , ImageUrl , stockQTY ,IsSuggest,IsPromotion, categoryid)VALUES
-              ('Wide Leg Jeans' , 230.00 , 'Image2.png' , 100 , true , false , 4),
-              ('Mom Fit Jeans' , 550.00 , 'Image3.png' , 100 , true , true , 4),
-              ('Flare Leg Jeans' , 440.00 , 'Image4.png' , 100 , false , true , 4),
-              ('Cute Floral Skirt' , 390.00 , 'Image5.png' , 100 , false , false , 5),
-              ('High Waisted Skirt' , 490.00 , 'Image6.png' , 100 , true , false , 5),
-              ('Mini Skirt' , 530.00 , 'Image7.png' , 100 , false , true , 5),
-              ('Plaid Skirt' , 500.00 , 'Image8.png' , 100 , false , false , 5),
-              ('Fashionable Blazer' , 499.00 , 'Image9.png' , 100 , true , true , 7),
-              ('Fashionable' , 760.00 , 'Image10.png' , 100 , false , false , 7),
-              ('T-Shirts No1' , 500.00 , 'Image11.png' , 100 , false , false , 6);
+            INSERT INTO products (productName , productPrice , ImageUrl , stockQTY ,IsSuggest,IsPromotion)VALUES
+              ('Wide Leg Jeans' , 230.00 , 'Image2.png' , 100 , true , false ),
+              ('Mom Fit Jeans' , 550.00 , 'Image3.png' , 100 , true , true ),
+              ('Flare Leg Jeans' , 440.00 , 'Image4.png' , 100 , false , true ),
+              ('Cute Floral Skirt' , 390.00 , 'Image5.png' , 100 , false , false ),
+              ('High Waisted Skirt' , 490.00 , 'Image6.png' , 100 , true , false ),
+              ('Mini Skirt' , 530.00 , 'Image7.png' , 100 , false , true ),
+              ('Plaid Skirt' , 500.00 , 'Image8.png' , 100 , false , false),
+              ('Fashionable Blazer' , 499.00 , 'Image9.png' , 100 , true , true),
+              ('Fashionable' , 760.00 , 'Image10.png' , 100 , false , false),
+              ('T-Shirts No1' , 500.00 , 'Image11.png' , 100 , false , false );
           ''');
         await ctx.query(''' 
            INSERT INTO customers (fname , lname , email , phone)VALUES
@@ -203,9 +210,6 @@ class TestServices {
           ''');
       });
       await conn.close();
-      // } else {
-      //   await connection.close();
-      // }
       debugPrint('Database setup complete');
     } catch (e) {
       debugPrint('Error: $e');

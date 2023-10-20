@@ -17,7 +17,7 @@ class HomeViewModels extends ChangeNotifier {
 
   List<int> selectCategoryId = [1];
 
-  List<productModels> filterProducts = [];
+  List<ProductModels> filterProducts = [];
   BillOrderModels billOrder = BillOrderModels.initial();
   List<BillDetailModel> billDetail = [];
   TextEditingController controller = TextEditingController();
@@ -183,14 +183,14 @@ class HomeViewModels extends ChangeNotifier {
       );
       filterProducts.addAll(promotionalProducts);
     }
-    final categoryProducts = allProducts.where(
-      (product) =>
-          selectCategoryId.contains(product.categoryId) &&
-          !filterProducts.any(
-            (filter) => product.productId == filter.productId,
-          ),
-    );
-    filterProducts.addAll(categoryProducts);
+    // final categoryProducts = allProducts.where(
+    //   (product) =>
+    //       selectCategoryId.contains(product) &&
+    //       !filterProducts.any(
+    //         (filter) => product.productId == filter.productId,
+    //       ),
+    // );
+    // filterProducts.addAll(categoryProducts);
   }
 
   void searchProducts(String query) {

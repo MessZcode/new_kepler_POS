@@ -42,7 +42,7 @@ class _CategoriesState extends State<Categories> {
             child: ElevatedButton(
               onPressed: () {
                 setState(() {
-                  context.read<HomeViewModels>().onPressedCategoryId(category[index].categoryId);
+                  context.read<HomeViewModels>().onPressedCategoryId(category[index].sluGroupId);
                 });
               },
               style: ElevatedButton.styleFrom(
@@ -55,12 +55,12 @@ class _CategoriesState extends State<Categories> {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 backgroundColor:
-                    selectcategory.contains(category[index].categoryId) ? theme.onBackground : theme.onError,
+                    selectcategory.contains(category[index].sluGroupId) ? theme.onBackground : theme.onError,
               ),
               child: Text(
-                category[index].categoryName,
+                category[index].sluGroupName,
                 style: TextStyle(
-                  color: selectcategory.contains(category[index].categoryId) ? theme.background : theme.onPrimary,
+                  color: selectcategory.contains(category[index].sluGroupId) ? theme.background : theme.onPrimary,
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
                 ),

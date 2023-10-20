@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kepler_pos/views/Settings/settingsApp/setting_category.dart';
 import 'package:kepler_pos/views/Settings/settingsApp/setting_discount.dart';
+import 'package:kepler_pos/views/Settings/settingsApp/setting_product.dart';
 import 'package:kepler_pos/views/Settings/settingsApp/setting_user.dart';
 import 'package:kepler_pos/views/Settings/settingsApp/viewModel/setting_app_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -92,8 +93,8 @@ class _SettingsAdminState extends State<SettingsAdmin> {
     if(value == "setting discount") {
       return const SettingDiscountView();
     }
-    if(value == "setting menu") {
-      return const Text("setting meny");
+    if(value == "setting Product") {
+      return const SettingProductView();
     }
     return Center(
       child: Text(

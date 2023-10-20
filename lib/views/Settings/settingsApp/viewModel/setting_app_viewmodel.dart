@@ -5,6 +5,6 @@ class SettingAppViewModel with ChangeNotifier {
     'setting users',
     'setting category',
     'setting discount',
-    'setting menu'
+    'setting Product'
   ];
 }

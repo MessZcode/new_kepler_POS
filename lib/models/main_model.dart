@@ -12,13 +12,22 @@ class PagesModels {
   });
 }
 
-class CategoryModels {
-  final int categoryId;
-  final String categoryName;
-  CategoryModels({required this.categoryId, required this.categoryName});
+class SluGroup {
+  final int sluGroupId;
+  final String sluGroupName;
+  // final int seq;
+  SluGroup({required this.sluGroupId, required this.sluGroupName});
 }
 
-class productModels {
+class SluItem {
+  final int sluGroupId;
+  final int itemSeq;
+  final int productId;
+
+  SluItem({required this.sluGroupId, required this.itemSeq, required this.productId});
+}
+
+class ProductModels {
   final int productId;
   final String productName;
   final double productPrice;
@@ -26,8 +35,7 @@ class productModels {
   final int stockQTY;
   final bool isSuggest;
   final bool isPromotion;
-  final int categoryId;
-  productModels({
+  ProductModels({
     required this.productId,
     required this.productName,
     required this.productPrice,
@@ -35,8 +43,19 @@ class productModels {
     required this.stockQTY,
     required this.isSuggest,
     required this.isPromotion,
-    required this.categoryId,
   });
+
+  factory ProductModels.initial(){
+    return ProductModels(
+      productId: 0, 
+      productName: "", 
+      productPrice: 0, 
+      imageUrl: "", 
+      stockQTY: 0, 
+      isSuggest: false, 
+      isPromotion: false,
+      );
+  }
 }
 
 class CustomerModels {
