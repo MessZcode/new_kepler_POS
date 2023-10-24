@@ -166,7 +166,9 @@ class _FormCreateUserViewState extends State<FormCreateUserView> {
                 lastlogin: null,
                 email: username,
                 password: password,
-                permissionLv: selectPermission!);
+                permissionLv: selectPermission!,
+              );
+              print(newValue.permissionLv);
             await context
                 .read<SettingUserViewModel>()
                 .createNewUser(newUser: newValue);
