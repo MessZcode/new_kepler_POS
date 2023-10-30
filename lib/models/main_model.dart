@@ -1,3 +1,5 @@
+import 'dart:io';
+
 class PagesModels {
   final int pageId;
   final String pageName;
@@ -31,7 +33,7 @@ class ProductModels {
   final int productId;
   final String productName;
   final double productPrice;
-  final String imageUrl;
+  final File? imageUrl;
   final int stockQTY;
   final bool isSuggest;
   final bool isPromotion;
@@ -50,7 +52,7 @@ class ProductModels {
       productId: 0, 
       productName: "", 
       productPrice: 0, 
-      imageUrl: "", 
+      imageUrl: null,
       stockQTY: 0, 
       isSuggest: false, 
       isPromotion: false,

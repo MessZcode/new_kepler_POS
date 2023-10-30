@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:kepler_pos/utils/assets_Images.dart';
@@ -102,12 +104,13 @@ class _ProductsState extends State<Products> {
             flex: 2,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16.0),
-              child: Image.asset(
-                // 'assets/Image2.png',
-                '${ImageAssets.productImagePath}/${filterProduct[index].imageUrl}',
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
+              // child: Image.file(
+              //   // 'assets/Image2.png',
+              //   filterProduct[index].imageUrl != null?File('${ImageAssets.productImagePath}/${'noImageKeplerProduuct.png'}'):
+              //   File('C:/Users/Poram/OneDrive/Documents/assets/${filterProduct[index].imageUrl}'),
+              //   width: double.infinity,
+              //   fit: BoxFit.cover,
+              // ),
             ),
           ),
           Expanded(

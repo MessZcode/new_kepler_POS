@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:kepler_pos/utils/assets_Images.dart';
 import 'package:kepler_pos/views/Settings/settingsApp/viewModel/setting_product_viewmodel.dart';
 import 'package:kepler_pos/views/Settings/settingsApp/widget/formCreate_product.dart';
 import 'package:kepler_pos/views/Settings/settingsApp/widget/formEdit_product.dart';
@@ -30,7 +33,8 @@ class _SettingProductViewState extends State<SettingProductView> {
               backgroundColor: MaterialStatePropertyAll(Colors.black12),
             ),
             onPressed: () {
-              showDialog(context: context, builder: (context) => const FormCreateProductView(),);
+              context.read<SettingProductViewModel>().clearValue();
+              showDialog(barrierDismissible: false,context: context, builder: (context) => const FormCreateProductView(),);
             },
             icon: const Icon(Icons.add),
             label: const Text("Create"),
@@ -94,8 +98,9 @@ class _SettingProductViewState extends State<SettingProductView> {
                       return DataRow(
                         cells: <DataCell>[
                           DataCell(
-                            Image.asset(
-                              'assets/images/imageProducts/${productList[index].imageUrl}',
+                            Image.file(
+                              productList[index].imageUrl!= null? File('${ImageAssets.productImagePath}/noImageKeplerProduuct.png'):
+                              File('C:/Users/Poram/OneDrive/Documents/assets/${productList[index].imageUrl}'),
                               fit: BoxFit.cover,
                               width: 50,
                               height: 70,
@@ -121,7 +126,7 @@ class _SettingProductViewState extends State<SettingProductView> {
                           DataCell(
                             InkWell(
                               onTap: () {
-                                showDialog(context: context, builder: (context) => FromEditProductView(productId: productList[index].productId),);
+                               showDialog(barrierDismissible: false,context: context, builder: (context) => FromEditProductView(productId: productList[index].productId),);
                               },
                               child: const Padding(
                                 padding: EdgeInsets.all(8.0),

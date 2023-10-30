@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:kepler_pos/service/api/api_Manager_String.dart';
 import 'package:kepler_pos/service/connect_database.dart';
@@ -223,7 +225,7 @@ class BaseViewModel extends ChangeNotifier {
           productId: products[0] as int,
           productName: products[1] as String,
           productPrice: double.parse(products[2]),
-          imageUrl: products[3] as String,
+          imageUrl: File(products[3]),
           stockQTY: products[4] as int,
           isSuggest: products[5] as bool,
           isPromotion: products[6] as bool,

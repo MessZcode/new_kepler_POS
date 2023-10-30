@@ -24,7 +24,7 @@ class SettingUserViewModel with ChangeNotifier {
           password: results.first[5],
           permissionLv: results.first[6]
       );
-      notifyListeners();
+      // notifyListeners();
       return user;
     } catch (e) {
       throw Exception("something went wong");

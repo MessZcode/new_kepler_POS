@@ -1,9 +1,8 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:kepler_pos/views/Settings/settingsApp/viewModel/setting_product_viewmodel.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../ViewModel/base_viewmodel.dart';
 
 class FormCreateProductView extends StatefulWidget {
   const FormCreateProductView({super.key});
@@ -20,48 +19,12 @@ class _FormCreateProductViewState extends State<FormCreateProductView> {
   final GlobalKey<FormFieldState<String>> _stockQty =
       GlobalKey<FormFieldState<String>>();
 
-  String productName = "";
-  double productPrice = 0.0;
-  int stockQty = 0;
-  bool isSuggest = false;
-  bool isPromotion = false;
-
-  File? image;
-  String filename = "keplerImage";
-
-  Future<void> saveImageToCustomLocation(File imageData) async {
-    Uint8List image = await convertImageToUint8List(imageData);
-    final file = File(r'D:\Dev\Project\new_kepler_POS\assets\images\imageProducts\'+filename);
-    await file.writeAsBytes(image);
-  }
-
-  Future getImage() async {
-    final picker = ImagePicker();
-
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      if (pickedFile != null) {
-        image = File(pickedFile.path);
-        filename = pickedFile.name;
-      } else {
-        print("no image selected");
-      }
-    });
-  }
-  Future<Uint8List> convertImageToUint8List(File imageFile) async {
-    Uint8List uint8list = await imageFile.readAsBytes();
-    return uint8list;
-  }
-
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
-
-
-
-
-
+    final settingProduct = context.read<SettingProductViewModel>();
+    final watchProduct = context.watch<SettingProductViewModel>();
+    final baseViewModel = context.read<BaseViewModel>();
     return AlertDialog(
       title: const Text("Create Product"),
       content: SizedBox(
@@ -92,11 +55,6 @@ class _FormCreateProductViewState extends State<FormCreateProductView> {
                           },
                         ),
                       ),
-                      // _buildTextFormField(
-                      //   key: _productName,
-                      //   controller: null,
-                      //   initialValue: null,
-                      // ),
                       const Text("Product price"),
                       SizedBox(
                         width: double.infinity,
@@ -106,18 +64,14 @@ class _FormCreateProductViewState extends State<FormCreateProductView> {
                           controller: null,
                           initialValue: null,
                           validator: (value) {
-                            if (value == null || double.tryParse(value) == null) {
+                            if (value == null ||
+                                double.tryParse(value) == null) {
                               return 'price is not correct';
                             }
                             return null;
                           },
                         ),
                       ),
-                      // _buildTextFormField(
-                      //   key: _productPrice,
-                      //   controller: null,
-                      //   initialValue: null,
-                      // ),
                       const Text("stock"),
                       SizedBox(
                         width: double.infinity,
@@ -134,11 +88,6 @@ class _FormCreateProductViewState extends State<FormCreateProductView> {
                           },
                         ),
                       ),
-                      // _buildTextFormField(
-                      //   key: _stockQty,
-                      //   controller: null,
-                      //   initialValue: null,
-                      // ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -146,19 +95,19 @@ class _FormCreateProductViewState extends State<FormCreateProductView> {
                           children: [
                             const Text("isSuggest"),
                             Switch(
-                                value: isSuggest,
+                                value: watchProduct.isSuggest,
                                 onChanged: (value) {
                                   setState(() {
-                                    isSuggest = value;
+                                    watchProduct.isSuggest = value;
                                   });
                                 },
                                 activeColor: theme.onBackground),
                             const Text("isPromotion"),
                             Switch(
-                                value: isPromotion,
+                                value: watchProduct.isPromotion,
                                 onChanged: (value) {
                                   setState(() {
-                                    isPromotion = value;
+                                    watchProduct.isPromotion = value;
                                   });
                                 },
                                 activeColor: theme.onBackground),
@@ -178,13 +127,24 @@ class _FormCreateProductViewState extends State<FormCreateProductView> {
                     width: 200,
                     height: 300,
                     child: Center(
-                      child: image != null ? Image.file(image!,width: 200, height: 200,fit: BoxFit.cover,):
-                      Image.asset('assets/images/imageProducts/noImageKeplerProduuct.png',width: 200 , height: 200 , fit: BoxFit.cover,),
+                      child: watchProduct.image != null
+                          ? Image.file(
+                              watchProduct.image!,
+                              width: 200,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(
+                              'assets/images/imageProducts/noImageKeplerProduuct.png',
+                              width: 200,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            ),
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () async{
-                      await getImage();
+                    onPressed: () async {
+                      await settingProduct.getImage();
                     },
                     child: const Text("Change Image"),
                   ),
@@ -195,23 +155,39 @@ class _FormCreateProductViewState extends State<FormCreateProductView> {
         ),
       ),
       actions: [
+        TextButton.icon(
+          onPressed: () {
+            settingProduct.clearValue();
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.close),
+          label: const Text("cancle"),
+        ),
         ElevatedButton(
           onPressed: () async {
-            print("DADAADADA");
-            if (_productName.currentState!.validate()) {
-              productName = _productName.currentState!.value.toString();
-            }
-            print("DADAADADA");
-            if (_productPrice.currentState!.validate()) {
-              productPrice = double.parse(_productPrice.currentState!.value!.toString());
-            }
-            print("DADAADADA");
-            if (_stockQty.currentState!.validate()) {
-              stockQty = int.parse(_stockQty.currentState!.value!.toString());
-            }
+            try {
+              if (_productName.currentState!.validate()) {
+                watchProduct.productName =
+                    _productName.currentState!.value.toString();
+              }
+              if (_productPrice.currentState!.validate()) {
+                watchProduct.productPrice =
+                    double.parse(_productPrice.currentState!.value!.toString());
+              }
+              if (_stockQty.currentState!.validate()) {
+                watchProduct.stockQty =
+                    int.parse(_stockQty.currentState!.value!.toString());
+              }
 
-
-            await saveImageToCustomLocation(image!);
+              await settingProduct.saveProduct(watchProduct.image);
+              await settingProduct.getAllProduct();
+              await baseViewModel.getProducts();
+            } catch (e) {
+              throw Exception(e);
+            } finally {
+              Navigator.pop(context);
+              settingProduct.clearValue();
+            }
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: theme.onSurface,

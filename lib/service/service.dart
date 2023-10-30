@@ -620,6 +620,32 @@ class Services {
     }
   }
 
+  Future<void> saveEditProduct({required ProductModels newProductModel}) async {
+    final connection = await connectToDatabase();
+    if (connection == null) {
+      return;
+    }
+    try {
+      final query = '''
+      UPDATE products
+      SET 
+        productname = '${newProductModel.productName}',
+        productprice = ${newProductModel.productPrice},
+        imageUrl = '${newProductModel.imageUrl}',
+        stockqty = ${newProductModel.stockQTY},
+        issuggest = ${newProductModel.isSuggest},
+        ispromotion = ${newProductModel.isPromotion},
+      WHERE productid = ${newProductModel.productId}
+    ''';
+      await connection.query(query);
+
+    } catch (e) {
+      print("Error: $e");
+    } finally {
+      await connection.close();
+    }
+  }
+
   Future<void> createNewUser({required UserModels newUserModel}) async {
     final connection = await connectToDatabase();
     if (connection == null) {
@@ -695,6 +721,29 @@ class Services {
     } catch (e) {
       print("Error : $e");
       return null;
+    } finally {
+      await connection.close();
+    }
+  }
+
+  Future<void> createNewProduct({required ProductModels newProduct}) async {
+    final connection = await connectToDatabase();
+    if (connection == null) {
+      return;
+    }
+    try {
+      await connection.query(
+        'INSERT INTO products (productname, productprice, imageurl, stockqty, issuggest, ispromotion) VALUES (@productName, @productPrice, @imageUrl, @stockQty  , @isSuggest, @isPromotion)',
+        substitutionValues: {
+          'productName': newProduct.productName,
+          'productPrice': newProduct.productPrice,
+          'imageUrl': newProduct.imageUrl,
+          'stockQty': newProduct.stockQTY,
+          'isSuggest': newProduct.isSuggest,
+          'isPromotion': newProduct.isPromotion,
+        },);
+    } catch (e) {
+      print("Error: $e");
     } finally {
       await connection.close();
     }

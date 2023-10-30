@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:kepler_pos/models/main_model.dart';
 import 'package:kepler_pos/views/Settings/settingsApp/viewModel/setting_product_viewmodel.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../utils/assets_Images.dart';
 
 class FromEditProductView extends StatefulWidget {
   const FromEditProductView({super.key, required this.productId});
@@ -13,26 +18,20 @@ class FromEditProductView extends StatefulWidget {
 class _FromEditProductViewState extends State<FromEditProductView> {
   final GlobalKey<FormFieldState<String>> _productName =
       GlobalKey<FormFieldState<String>>();
-  final GlobalKey<FormFieldState<double>> _productPrice =
-      GlobalKey<FormFieldState<double>>();
+  final GlobalKey<FormFieldState<String>> _productPrice =
+      GlobalKey<FormFieldState<String>>();
   final GlobalKey<FormFieldState<String>> _stockQty =
       GlobalKey<FormFieldState<String>>();
 
+  String imageProduct = "";
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
+    final settingProduct = context.read<SettingProductViewModel>();
+    final watchProduct = context.watch<SettingProductViewModel>();
 
     return AlertDialog(
       title: const Text("Edit Product"),
-      actions: [
-        TextButton(
-          onPressed: () {},
-          style: TextButton.styleFrom(
-            backgroundColor: theme.onPrimary,
-          ),
-          child: const Text("Submit"),
-        ),
-      ],
       content: SizedBox(
         width: 700,
         height: 450,
@@ -42,6 +41,7 @@ class _FromEditProductViewState extends State<FromEditProductView> {
                 .getProductByOne(productId: widget.productId),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                // imageProduct = sna;
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -54,23 +54,52 @@ class _FromEditProductViewState extends State<FromEditProductView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               const Text("Product Name"),
-                              _buildTextFormField(
+                              SizedBox(
+                                width: double.infinity,
+                                height: 70,
+                                child: TextFormField(
                                   key: _productName,
                                   controller: null,
-                                  initialValue: snapshot.data!.productName),
+                                  initialValue: snapshot.data!.productName,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter product name';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
                               const Text("Product price"),
-                              _buildTextFormField(
-                                key: _productPrice,
-                                controller: null,
-                                initialValue: snapshot.data!.productPrice
-                                    .toStringAsFixed(2),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 70,
+                                child: TextFormField(
+                                  key: _productPrice,
+                                  controller: null,
+                                  initialValue: snapshot.data!.productPrice.toString(),
+                                  validator: (value) {
+                                    if (value == null || double.tryParse(value) == null) {
+                                      return 'price is not correct';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
                               const Text("stock"),
-                              _buildTextFormField(
-                                key: _stockQty,
-                                controller: null,
-                                initialValue:
-                                    snapshot.data!.stockQTY.toString(),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 70,
+                                child: TextFormField(
+                                  key: _stockQty,
+                                  controller: null,
+                                  initialValue: snapshot.data!.stockQTY.toString(),
+                                  validator: (value) {
+                                    if (value == null || int.tryParse(value) == null) {
+                                      return 'number is not correct';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -104,13 +133,21 @@ class _FromEditProductViewState extends State<FromEditProductView> {
                             width: 200,
                             height: 300,
                             child: Center(
-                              child: Image.asset(
-                                  'assets/images/imageProducts/${snapshot.data!.imageUrl}'),
+                              child: Image.file(
+                                watchProduct.image != null
+                                    ? File(watchProduct.image!.path)
+                                    : snapshot.data!.imageUrl!= null
+                                        ? File(
+                                            '${ImageAssets.productImagePath}/noImageKeplerProduuct.png')
+                                        : File(
+                                            'C:/Users/Poram/OneDrive/Documents/assets/${snapshot.data!.imageUrl}'),
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                           ElevatedButton(
-                            onPressed: () {
-                              // กระทำเมื่อปุ่มถูกกด
+                            onPressed: () async {
+                              await settingProduct.getImage();
                             },
                             child: const Text("Change Image"),
                           ),
@@ -132,27 +169,71 @@ class _FromEditProductViewState extends State<FromEditProductView> {
               );
             }),
       ),
-    );
-  }
+      actions: [
+        TextButton.icon(
+          onPressed: () {
+            settingProduct.clearValue();
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.close),
+          label: const Text("cancle"),
+        ),
+        TextButton(
+          onPressed: () async {
+            print("HEAR");
+            try {
+              print("HEAR2");
+              if (_productName.currentState!.validate()) {
+                watchProduct.productName =
+                    _productName.currentState!.value.toString();
+              }
+              print("HEAR3");
+              if (_productPrice.currentState!.validate()) {
+                watchProduct.productPrice =
+                    double.parse(_productPrice.currentState!.value!.toString());
+              }
+              print("HEAR4");
+              if (_stockQty.currentState!.validate()) {
+                watchProduct.stockQty =
+                    int.parse(_stockQty.currentState!.value!.toString());
+              }
+              if(watchProduct.image != null){
+                imageProduct = watchProduct.fileName;
+              }
+              // await settingProduct.saveProduct(watchProduct.image);
+              // await settingProduct.getAllProduct();
+              // await baseViewModel.getProducts();
+              print("check Success");
+              print("check Success : ${widget.productId}");
+              print("check Success : ${watchProduct.productName}");
+              print("check Success : ${watchProduct.productPrice}");
+              print("check Success : $imageProduct");
+              print("check Success : ${watchProduct.stockQty}");
+              print("check Success : ${watchProduct.isSuggest}");
+              print("check Success : ${watchProduct.isPromotion}");
 
-  Widget _buildTextFormField(
-      {required Key key,
-      required TextEditingController? controller,
-      required String? initialValue}) {
-    return SizedBox(
-      width: double.infinity,
-      height: 70,
-      child: TextFormField(
-        key: key,
-        controller: controller,
-        initialValue: initialValue,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter some text';
-          }
-          return null;
-        },
-      ),
+              ProductModels newProductModel = ProductModels(
+                      productId: widget.productId,
+                      productName: watchProduct.productName,
+                      productPrice: watchProduct.productPrice,
+                      imageUrl: null,
+                      stockQTY: watchProduct.stockQty,
+                      isSuggest: watchProduct.isSuggest,
+                      isPromotion: watchProduct.isPromotion);
+              await settingProduct.saveEditProduct(newProductModel: newProductModel);
+            } catch (e) {
+              throw Exception(e);
+            } finally {
+              Navigator.pop(context);
+              settingProduct.clearValue();
+            }
+          },
+          style: TextButton.styleFrom(
+            backgroundColor: theme.onPrimary,
+          ),
+          child: const Text("Submit"),
+        ),
+      ],
     );
   }
 }
